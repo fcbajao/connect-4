@@ -1,0 +1,20 @@
+{
+  "name": "connect-4",
+  "author": "Erick Bajao <fcbajao@gmail.com>",
+  "version": "0.1.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fcbajao/connect-4.git"
+  },
+  "dependencies": {
+    "browserify": "~> 10.2.4",
+    "browserify-incremental": "^3.0.1",
+    "coffeeify": "~> 0.6",
+    "jquery": "~2.2.0",
+    "underscore": "~1.8.3"
+  },
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.10"
+  }
+}

@@ -1,0 +1,159 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or any plugin's vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content}
+  &:-moz-placeholder           {@content}
+  &::-moz-placeholder          {@content}
+  &:-ms-input-placeholder      {@content}  
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+  font-family: Verdana;
+  padding: 0;
+  padding-bottom: 150px;
+  margin: 0;
+  background-color: #e67e22;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 40px;
+
+  a {
+    display: block;
+    width: 32px;
+    height: 32px;
+    margin: 0 auto;
+    font-size: 0;
+    background-image: image-url("github-logo.png");
+    background-size: cover;
+  }
+}
+
+h1 {
+  margin: 0;
+  background-color: #2c3e50;
+  color: #ecf0f1;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -3px;
+  text-align: center;
+  padding: 20px;
+}
+
+.notice {
+  color: #ecf0f1;
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.new-game-form {
+  font-size: 0; // To remove whitespace between inline elements
+  text-align: center;
+  padding: 40px;
+
+  .player-field, .action {
+    display: inline-block;
+  }
+  
+  .player-field {
+    margin-right: 20px;
+  }
+
+  label {
+    display: none;
+  }
+
+  .player-field input, .new-game-button {
+    font-size: 18px;
+    border: none;
+    outline: none;
+  }
+
+  .player-field input {
+    padding: 10px;
+    background-color: #ecf0f1;
+    color: #2c3e50;
+
+    @include placeholder {
+      color: #bdc3c7;
+    }
+  }
+
+  .new-game-button {
+    padding: 10px 20px;
+    background-color: #16a085;
+    color: #ecf0f1;
+  }
+}
+
+.board {
+  width: 720px;
+  margin: 0 auto;
+  overflow: auto;
+  background-color: #2980b9;
+  border: 10px solid #3498db;
+  border-radius: 10px;
+  display: none;
+
+  &.enabled {
+    display: block;
+  }
+}
+
+.slot {
+  width: 100px;
+  height: 100px;
+  float: left;
+  overflow: hidden;
+  position: relative;
+
+  &:before {
+    content: "";
+    display: block;
+    box-sizing: content-box;
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: -90px;
+    left: -90px;
+    border-radius: 9999px;
+    border: 100px solid #3498db;
+  }
+
+  &.player-1:before {
+    background-color: #f1c40f;
+  }
+
+  &.player-2:before {
+    background-color: #e74c3c;
+  }
+}

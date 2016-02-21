@@ -1,0 +1,14 @@
+%h1= t("connect4")
+
+%form.new-game-form{autocomplete: "off"}
+  %div.player-field
+    %label{for: "first_player_name"}= t("labels.player", num: 1)
+    = text_field_tag "first_player_name", nil, placeholder: t("labels.player", num: 1)
+  %div.player-field
+    %label{for: "second_player_name"}= t("labels.player", num: 2)
+    = text_field_tag "second_player_name", nil, placeholder: t("labels.player", num: 2)
+  %div.action
+    = submit_tag t("buttons.new_game"), class: "new-game-button"
+
+.notice
+.board

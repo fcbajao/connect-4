@@ -1,0 +1,7 @@
+en:
+  connect4: "Connect4"
+  github_page: "Github Project Page"
+  labels:
+    player: "Player %{num}"
+  buttons:
+    new_game: "New Game"
