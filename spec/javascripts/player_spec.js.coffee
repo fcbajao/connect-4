@@ -1,6 +1,6 @@
 Player = require("player")
 
-describe "player", ->
+describe "Player", ->
   describe "constructor", ->
     player = null
 
@@ -9,3 +9,6 @@ describe "player", ->
 
     it "sets the player's name", ->
       expect(player.name).toEqual("Patrick")
+
+    it "sets the bot to false by default", ->
+      expect(player.bot).toBe(false)

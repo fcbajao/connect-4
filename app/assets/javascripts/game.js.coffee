@@ -1,35 +1,29 @@
 $ = require("jquery")
 _ = require("underscore")
+GameState = require("game_state")
 
 GRID_WIDTH = 7
 GRID_HEIGHT = 6
-NEUTRAL_DIRECTION = 0
-UP_DIRECTION = +1
-RIGHT_DIRECTION = +1
-DOWN_DIRECTION = -1
-LEFT_DIRECTION = -1
-
 
 class Game
   constructor: (@player1, @player2, @board, @options = {}) ->
-    @grid = [[], [], [], [], [], [], []]
     _renderSlots.call(this, @board)
     _setupBoardEventHandlers.call(this, @board)
-    @onTurnStart(@getActivePlayer())
     _enableBoard.call(this, @board)
+    @currentState = new GameState
+    @onTurnStart(@getCurrentTurn())
 
   destroy: ->
     _disableBoard.call(this, @board)
     _teardownBoardEventHandlers.call(this, @board)
 
-  getActivePlayer: ->
+  getCurrentTurn: ->
     @activePlayer ?= @player1
 
-  placeChip: (x, player) ->
-    return if @victor? or @grid[x].length is GRID_HEIGHT
-    y = @grid[x].length
-
-    elem = _getSlotElem.call(this, x, y)
+  makeMove: (x, player) ->
+    @currentState.makeMove(x, player)
+    lastMove = @currentState.getLastMove()
+    elem = _getSlotElem.call(this, lastMove.x, lastMove.y)
 
     playerClass = if player is @player1
       "player-1"
@@ -37,39 +31,30 @@ class Game
       "player-2"
 
     elem.addClass(playerClass)
-    @grid[x][y] = player
 
-    @determineTurnResult(x, y)
+    winner = @currentState.getWinner()
 
-  determineTurnResult: (latestX, latestY) ->
-    player = @grid[latestX][latestY]
-
-    diagonalBackward = _getDiagonalBackwardConnection.call(this, latestX, latestY)
-    if diagonalBackward.length >= 4
-      return @onVictory(player)
-
-    diagonalForward = _getDiagonalForwardConnection.call(this, latestX, latestY)
-    if diagonalForward.length >= 4
-      return @onVictory(player)
-
-    horizontal = _getHorizontalConnection.call(this, latestX, latestY)
-    if horizontal.length >= 4
-      return @onVictory(player)
-
-    vertical = _getVerticalConnection.call(this, latestX, latestY)
-    if vertical.length >= 4
-      return @onVictory(player)
-
-    nextPlayer = _.without([@player1, @player2], player)[0]
-    @onTurnStart(nextPlayer)
+    if winner is player
+      @onVictory(player)
+    else if @currentState.getAvailableMoves().length is 0
+      @onDraw()
+    else
+      nextPlayer = _.without([@player1, @player2], player)[0]
+      @onTurnStart(nextPlayer)
 
   onTurnStart: (nextPlayer) ->
     @activePlayer = nextPlayer
     @options.onTurnStart(nextPlayer) if @options.onTurnStart?
 
+    if nextPlayer.bot
+      x = nextPlayer.requestMove(this)
+      @makeMove(x, nextPlayer)
+
   onVictory: (victor) ->
-    @victor = victor
     @options.onVictory(victor) if @options.onVictory?
+
+  onDraw: ->
+    @options.onDraw() if @options.onDraw?
 
   _enableBoard = (board) ->
     board.addClass("enabled")
@@ -103,58 +88,12 @@ class Game
 
   _onBoardClick = (e) ->
     slot = $(e.target)
-    @placeChip(slot.data("x"), @getActivePlayer())
+    x = slot.data("x")
+    activePlayer = @getCurrentTurn()
+    return if activePlayer.bot or @currentState.isOver() or x not in @currentState.getAvailableMoves()
+    @makeMove(x, activePlayer)
 
   _getSlotElem = (x, y) ->
     @board.find(".slot[data-x=#{x}][data-y=#{y}]")
-
-  _getDiagonalBackwardConnection = (x, y) ->
-    connection = [[x, y]]
-    # Start search downwards
-    connection = connection.concat _collectConnectedCoordinates.call(this, x, y, LEFT_DIRECTION, DOWN_DIRECTION)
-    # Start search upwards
-    connection = connection.concat _collectConnectedCoordinates.call(this, x, y, RIGHT_DIRECTION, UP_DIRECTION)
-    connection
-
-  _getDiagonalForwardConnection = (x, y) ->
-    connection = [[x, y]]
-    # Start search downwards
-    connection = connection.concat _collectConnectedCoordinates.call(this, x, y, RIGHT_DIRECTION, DOWN_DIRECTION)
-    # Start search upwards
-    connection = connection.concat _collectConnectedCoordinates.call(this, x, y, LEFT_DIRECTION, UP_DIRECTION)
-    connection
-
-  _getHorizontalConnection = (x, y) ->
-    connection = [[x, y]]
-    # Start search left
-    connection = connection.concat _collectConnectedCoordinates.call(this, x, y, LEFT_DIRECTION, NEUTRAL_DIRECTION)
-    # Start search right
-    connection = connection.concat _collectConnectedCoordinates.call(this, x, y, RIGHT_DIRECTION, NEUTRAL_DIRECTION)
-    connection
-
-  _getVerticalConnection = (x, y) ->
-    connection = [[x, y]]
-    # Start search downward
-    connection = connection.concat _collectConnectedCoordinates.call(this, x, y, NEUTRAL_DIRECTION, DOWN_DIRECTION)
-    connection
-
-  _collectConnectedCoordinates = (x, y, xDirection, yDirection) ->
-    player = @grid[x][y]
-    connection = []
-
-    x2 = x
-    y2 = y
-    searching = true
-    while searching
-      x2 = x2 + xDirection
-      y2 = y2 + yDirection
-
-      candidate = @grid[x2]?[y2]
-      if candidate? and candidate is player
-        connection.push([x2, y2])
-      else
-        searching = false
-
-    connection
 
 module.exports = Game

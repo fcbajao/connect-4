@@ -11,3 +11,4 @@
 #
 #= require player
 #= require game
+#= require game_state

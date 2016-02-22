@@ -5,3 +5,5 @@ en:
     player: "Player %{num}"
   buttons:
     new_game: "New Game"
+  notices:
+    default: "If you don't enter a name, a bot will play in place for the player."

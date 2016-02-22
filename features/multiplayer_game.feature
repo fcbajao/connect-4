@@ -20,3 +20,49 @@ Feature: Multiplayer Game
     And player 2 drops a chip on column 2
     And player 1 drops a chip on column 1
     Then I should see "Erick Wins!"
+
+  @javascript
+  Scenario: Draw
+    When player 1 drops a chip on column 1
+    And player 2 drops a chip on column 1
+    And player 1 drops a chip on column 1
+    And player 2 drops a chip on column 1
+    And player 1 drops a chip on column 1
+    And player 2 drops a chip on column 1
+    And player 1 drops a chip on column 2
+    And player 2 drops a chip on column 2
+    And player 1 drops a chip on column 2
+    And player 2 drops a chip on column 2
+    And player 1 drops a chip on column 2
+    And player 2 drops a chip on column 2
+    And player 1 drops a chip on column 7
+    And player 2 drops a chip on column 3
+    And player 1 drops a chip on column 3
+    And player 2 drops a chip on column 3
+    And player 1 drops a chip on column 3
+    And player 2 drops a chip on column 3
+    And player 1 drops a chip on column 3
+    And player 2 drops a chip on column 4
+    And player 1 drops a chip on column 4
+    And player 2 drops a chip on column 4
+    And player 1 drops a chip on column 4
+    And player 2 drops a chip on column 4
+    And player 1 drops a chip on column 4
+    And player 2 drops a chip on column 7
+    And player 1 drops a chip on column 5
+    And player 2 drops a chip on column 5
+    And player 1 drops a chip on column 5
+    And player 2 drops a chip on column 5
+    And player 1 drops a chip on column 5
+    And player 2 drops a chip on column 5
+    And player 1 drops a chip on column 6
+    And player 2 drops a chip on column 6
+    And player 1 drops a chip on column 6
+    And player 2 drops a chip on column 6
+    And player 1 drops a chip on column 6
+    And player 2 drops a chip on column 6
+    And player 1 drops a chip on column 7
+    And player 2 drops a chip on column 7
+    And player 1 drops a chip on column 7
+    And player 2 drops a chip on column 7
+    Then I should see "It's a Draw!"
